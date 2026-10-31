@@ -1,4 +1,4 @@
-"""Core Turkish (tr) and Azeri (az) casing and normalization logic."""
+"""Core Turkish (tr) and Azeri (az) casing, casefolding, and normalization logic."""
 
 from __future__ import annotations
 
@@ -85,6 +85,30 @@ def _lower_with_context(text: str) -> str:
     return "".join(out)
 
 
+def _casefold_with_context(text: str) -> str:
+    """Apply Unicode CaseFolding (C + F + T) with Before_Dot/After_I context."""
+    out: list[str] = []
+    after_i = False
+    for idx, ch in enumerate(text):
+        if ch == "I":
+            if _is_before_dot(text, idx):
+                out.append("i")
+            else:
+                out.append("ı")
+            after_i = True
+        elif ch == "İ":
+            out.append("i")
+            after_i = False
+        elif ch == "\u0307" and after_i:
+            after_i = False
+        else:
+            ccc = unicodedata.combining(ch)
+            if ccc in (0, 230):
+                after_i = False
+            out.append(ch.casefold())
+    return "".join(out)
+
+
 def tr_lower(
     text: str,
     *,
@@ -123,7 +147,6 @@ def _titlecase_char(ch: str) -> str:
         return "İ"
     if ch in ("ı", "I"):
         return "I"
-    # Note: ligatures like 'ﬁ' (U+FB01) expand to 'Fi' via .title(), where 'i' stayed lower
     return ch.title()
 
 
@@ -205,6 +228,40 @@ def tr_swapcase(
     return normalize_tr("".join(out), heal_broken_i=heal_broken_i)
 
 
+def tr_casefold(
+    text: str,
+    *,
+    lang: SupportedLang = "tr",
+    heal_broken_i: bool = True,
+) -> str:
+    """Return a Turkish/Azeri casefolded string suitable for caseless comparison.
+
+    Applies Unicode CaseFolding.txt status 'T' rules ('İ' -> 'i', 'I' -> 'ı')
+    alongside standard 'C' and 'F' full casefolding (e.g. 'ß' -> 'ss').
+    """
+    _validate_lang(lang)
+    norm = normalize_tr(text, heal_broken_i=heal_broken_i)
+    if "\u0307" not in norm:
+        result = norm.translate(_LOWER_TABLE).casefold()
+    else:
+        result = _casefold_with_context(norm)
+    return normalize_tr(result, heal_broken_i=heal_broken_i)
+
+
+def tr_equals(
+    a: str,
+    b: str,
+    *,
+    lang: SupportedLang = "tr",
+    heal_broken_i: bool = True,
+) -> bool:
+    """Return True if strings `a` and `b` are equal under Turkish/Azeri caseless comparison."""
+    _validate_lang(lang)
+    return tr_casefold(a, lang=lang, heal_broken_i=heal_broken_i) == tr_casefold(
+        b, lang=lang, heal_broken_i=heal_broken_i
+    )
+
+
 def az_lower(text: str, *, heal_broken_i: bool = True) -> str:
     """Convert text to lowercase using Azeri ('az') rules."""
     return tr_lower(text, lang="az", heal_broken_i=heal_broken_i)
@@ -223,3 +280,13 @@ def az_titlecase(text: str, *, heal_broken_i: bool = True) -> str:
 def az_swapcase(text: str, *, heal_broken_i: bool = True) -> str:
     """Swap uppercase and lowercase characters using Azeri ('az') rules."""
     return tr_swapcase(text, lang="az", heal_broken_i=heal_broken_i)
+
+
+def az_casefold(text: str, *, heal_broken_i: bool = True) -> str:
+    """Casefold text using Azeri ('az') rules."""
+    return tr_casefold(text, lang="az", heal_broken_i=heal_broken_i)
+
+
+def az_equals(a: str, b: str, *, heal_broken_i: bool = True) -> bool:
+    """Return True if `a` and `b` are equal under Azeri ('az') caseless comparison."""
+    return tr_equals(a, b, lang="az", heal_broken_i=heal_broken_i)
