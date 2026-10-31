@@ -1,0 +1,88 @@
+"""Auto-generated golden vectors from official Unicode SpecialCasing.txt."""
+
+from __future__ import annotations
+
+UNICODE_VERSION = "15.1.0"
+
+SPECIAL_CASING_RULES: list[dict[str, str]] = [
+    {
+        'code_hex': '0130',
+        'source': 'İ',
+        'lower': 'i',
+        'title': 'İ',
+        'upper': 'İ',
+        'lang': 'tr',
+        'context': '',
+        'comment': 'LATIN CAPITAL LETTER I WITH DOT ABOVE',
+    },
+    {
+        'code_hex': '0130',
+        'source': 'İ',
+        'lower': 'i',
+        'title': 'İ',
+        'upper': 'İ',
+        'lang': 'az',
+        'context': '',
+        'comment': 'LATIN CAPITAL LETTER I WITH DOT ABOVE',
+    },
+    {
+        'code_hex': '0307',
+        'source': '̇',
+        'lower': '',
+        'title': '̇',
+        'upper': '̇',
+        'lang': 'tr',
+        'context': 'After_I',
+        'comment': 'COMBINING DOT ABOVE',
+    },
+    {
+        'code_hex': '0307',
+        'source': '̇',
+        'lower': '',
+        'title': '̇',
+        'upper': '̇',
+        'lang': 'az',
+        'context': 'After_I',
+        'comment': 'COMBINING DOT ABOVE',
+    },
+    {
+        'code_hex': '0049',
+        'source': 'I',
+        'lower': 'ı',
+        'title': 'I',
+        'upper': 'I',
+        'lang': 'tr',
+        'context': 'Not_Before_Dot',
+        'comment': 'LATIN CAPITAL LETTER I',
+    },
+    {
+        'code_hex': '0049',
+        'source': 'I',
+        'lower': 'ı',
+        'title': 'I',
+        'upper': 'I',
+        'lang': 'az',
+        'context': 'Not_Before_Dot',
+        'comment': 'LATIN CAPITAL LETTER I',
+    },
+    {
+        'code_hex': '0069',
+        'source': 'i',
+        'lower': 'i',
+        'title': 'İ',
+        'upper': 'İ',
+        'lang': 'tr',
+        'context': '',
+        'comment': 'LATIN SMALL LETTER I',
+    },
+    {
+        'code_hex': '0069',
+        'source': 'i',
+        'lower': 'i',
+        'title': 'İ',
+        'upper': 'İ',
+        'lang': 'az',
+        'context': '',
+        'comment': 'LATIN SMALL LETTER I',
+    },
+]

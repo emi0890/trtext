@@ -30,6 +30,7 @@ packages = ["src/trtext"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = [".", "tests"]
 addopts = "-q"
 
 [tool.ruff]
